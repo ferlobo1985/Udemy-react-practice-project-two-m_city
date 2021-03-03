@@ -6,15 +6,15 @@ import { Redirect } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { PinDropSharp } from '@material-ui/icons';
+import { showErrorToast, showSuccessToast  } from '../Utils/tools';
 
 const SignIn = (props) => {
     const [loading, setLoading] = useState(false)
 
     const formik = useFormik({
         initialValues:{
-            email:'',
-            password:''
+            email:'francis@gmail.com',
+            password:'testing123'
         },
         validationSchema: Yup.object({
             email: Yup.string()
@@ -35,12 +35,11 @@ const SignIn = (props) => {
             values.email,
             values.password
         ).then(()=>{
-            // show success toast
+            showSuccessToast('Welcome back !!')
             props.history.push('/dashboard');
         }).catch(error=>{
             setLoading(false);
-            alert(error)
-            /// show toasts
+            showErrorToast(error.message)
         })
     }
 
@@ -66,6 +65,7 @@ const SignIn = (props) => {
 
 
                     <input
+                        placeholder="enter your password"
                         name="password"
                         type="password"
                         onChange={formik.handleChange}

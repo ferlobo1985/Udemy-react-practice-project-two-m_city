@@ -2,9 +2,22 @@ import React from 'react';
 import { AppBar, Toolbar, Button } from '@material-ui/core'
 
 import { Link } from 'react-router-dom';
-import { CityLogo } from '../Utils/tools'
+import { CityLogo } from '../Utils/tools';
+import { firebase } from '../../firebase';
+import { showErrorToast, showSuccessToast  } from '../Utils/tools';
 
-const Header = () => {
+const Header = ({user}) => {
+
+
+    const logoutHandler = () => {
+        firebase.auth().signOut()
+        .then(()=>{
+            showSuccessToast('Good bye!!')
+        }).catch(error => {
+            showErrorToast(error.message)
+        })
+    }
+
     return(
         <AppBar
             position="fixed"
@@ -34,9 +47,23 @@ const Header = () => {
                     <Button color="inherit">Matches</Button>
                 </Link>
 
-                <Link to="/dashboard">
-                    <Button color="inherit">Dashboard</Button>
-                </Link>
+                { user ?
+                <>
+                    <Link to="/dashboard">
+                        <Button color="inherit">Dashboard</Button>
+                    </Link>
+
+                   
+                    <Button color="inherit"
+                        onClick={()=> logoutHandler()}
+                    
+                    >Log out</Button>
+            
+                </>
+                :
+                null
+                }
+              
 
             </Toolbar>
         </AppBar> 
