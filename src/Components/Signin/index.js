@@ -10,7 +10,6 @@ import { showErrorToast, showSuccessToast  } from '../Utils/tools';
 
 const SignIn = (props) => {
     const [loading, setLoading] = useState(false)
-
     const formik = useFormik({
         initialValues:{
             email:'francis@gmail.com',
@@ -43,8 +42,9 @@ const SignIn = (props) => {
         })
     }
 
-
     return(
+        <>
+        { !props.user ?     
         <div className="container">
             <div className="signin_wrapper" style={{margin:'100px'}}>
 
@@ -90,6 +90,10 @@ const SignIn = (props) => {
 
             </div>
         </div>
+        :
+            <Redirect to={'/dashboard'}/>
+        }
+        </>
     )
 
 }
