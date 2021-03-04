@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { firebase } from '../../firebase';
 
 import mcitylogo from '../../Resources/images/logos/manchester_city_logo.png';
 
@@ -35,5 +36,16 @@ export const showErrorToast = (msg) => {
 export const showSuccessToast = (msg) => {
     toast.success(msg,{
         position: toast.POSITION.TOP_LEFT
+    })
+}
+
+
+
+export const logoutHandler = () => {
+    firebase.auth().signOut()
+    .then(()=>{
+        showSuccessToast('Good bye!!')
+    }).catch(error => {
+        showErrorToast(error.message)
     })
 }
