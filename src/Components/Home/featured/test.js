@@ -27,6 +27,12 @@ const Test = () => {
                         ease:easePolyOut
                     }
                 }}
+                update={{
+
+                }}
+                leave={{
+                    
+                }}
             >
                 { ({ width,height,opacity,backgroundColor })=> (
                     <div
