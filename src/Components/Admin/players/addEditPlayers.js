@@ -30,19 +30,58 @@ const AddEditPlayers = (props) => {
             .required('This input is required'),
             number:Yup.number()
             .required('This input is required')
-            .min('0','The minimum is cero')
-            .max('100','The max is 100'),
+            .min(0,'The minimum is cero')
+            .max(100,'The max is 100'),
             position:Yup.string()
             .required('This input is required'),
-        })
+        }),
+        onSubmit:(values)=>{
+            submitForm(values);
+        }
     });
+
+
+    const submitForm = (values) => {
+        let dataToSubmit = values;
+        setLoading(true)
+
+        if( formType === 'add'){
+            playersCollection.add(dataToSubmit)
+            .then(()=>{
+                showSuccessToast('Player added');
+                formik.resetForm();
+                props.history.push('/admin_players');
+            }).catch(error => {
+                showErrorToast(error);
+            });
+        } else {
+            playersCollection.doc(props.match.params.playerid).update(dataToSubmit)
+            .then(()=>{
+                showSuccessToast('Player updated');
+            }).catch(error=>{
+                showErrorToast(error);
+            }).finally(()=>{
+                setLoading(false)
+            })
+        }
+    }
+
 
     useEffect(()=>{
         const param = props.match.params.playerid;
         if(param){
-
-            setFormType('edit');
-            setValues({name:'sjshsjs'})
+            playersCollection.doc(param).get().then( snapshot => {
+                if(snapshot.data()){
+                    //// 
+                    
+                    setFormType('edit');
+                    setValues(snapshot.data())
+                } else {
+                    showErrorToast('Sorry, nothing was found')
+                }
+            }).catch(error=>{
+                showErrorToast(error)
+            })
         } else {
             setFormType('add');
             setValues(defaultValues)
@@ -94,6 +133,7 @@ const AddEditPlayers = (props) => {
                         <div className="mb-5">
                             <FormControl>
                                 <TextField
+                                    type="number"
                                     id="number"
                                     name="number"
                                     variant="outlined"
