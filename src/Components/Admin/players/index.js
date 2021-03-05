@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
 import AdminLayout from '../../../Hoc/AdminLayout';
 
 import { playersCollection } from '../../../firebase';
-import { Button } from '@material-ui/core';
+import { 
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Paper,
+    CircularProgress
+} from '@material-ui/core';
+import { showErrorToast } from '../../Utils/tools';
 
 const AdminPlayers = () => {
     const [lastVisible,setLastVisible] = useState(null);
@@ -25,7 +36,7 @@ const AdminPlayers = () => {
                 setLastVisible(lastVisible);
                 setPlayers(players)
             }).catch(error=>{
-                console.log(error)
+                showErrorToast(error)
             }).finally(()=>{
                 setLoading(false)
             })
@@ -51,31 +62,85 @@ const AdminPlayers = () => {
                 setLastVisible(lastVisible);
                 setPlayers([...players,...newPlayers]);
             }).catch(error=>{
-                console.log(error)
+                showErrorToast(error)
             }).finally(()=>{
                 setLoading(false)
             })
 
 
         } else {
-            console.log('nothing to load')
+            showErrorToast('nothing to load')
         }
 
     }
 
 
-    console.log(players)
-    console.log(lastVisible)
 
     return(
         <AdminLayout title="The players">
-            
+            <div className="mb-5">
+                <Button
+                    disableElevation
+                    variant="outlined"
+                    component={Link}
+                    to={'/admin_players/add_player'}
+                >
+                    Add player
+                </Button>
+            </div>
+
+            <Paper className="mb-5">
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>First name</TableCell>
+                            <TableCell>Last name</TableCell>
+                            <TableCell>Number</TableCell>
+                            <TableCell>Position</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        { players ?
+                            players.map((player,i)=>(
+                            <TableRow key={player.id}>
+                                <TableCell>
+                                    <Link to={`/admin_players/edit_player/${player.id}`}>
+                                        {player.name}
+                                    </Link>
+                                </TableCell>
+                                <TableCell>
+                                    <Link to={`/admin_players/edit_player/${player.id}`}>
+                                        {player.lastname}
+                                    </Link>
+                                </TableCell>
+                                <TableCell>
+                                    {player.number}
+                                </TableCell>
+                                <TableCell>
+                                    {player.position}
+                                </TableCell>
+                            </TableRow>  
+                            ))
+                        :null}
+                    </TableBody>
+                </Table>
+            </Paper>
+
 
             <Button
+                variant="contained"
+                color="primary"
                 onClick={()=> loadMorePlayers()}
+                disabled={loading}
             >
                 Load more
             </Button>
+
+            <div className="admin_progress">
+                { loading ?
+                    <CircularProgress thickness={7} style={{color:'#98c5e9'}}/>
+                :null}
+            </div>
 
         </AdminLayout>
     )
