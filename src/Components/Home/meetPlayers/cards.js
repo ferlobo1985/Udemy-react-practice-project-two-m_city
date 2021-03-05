@@ -6,6 +6,7 @@ import Animate from 'react-move/Animate'
 import Otamendi from '../../../Resources/images/players/Otamendi.png';
 import Sterling from '../../../Resources/images/players/Raheem_Sterling.png';
 import Kompany from '../../../Resources/images/players/Vincent_Kompany.png';
+import PlayerCard from '../../Utils/playerCard';
 
 
 let cards = [
@@ -35,8 +36,35 @@ const HomeCards = (props) => {
 
     const showAnimateCards = () => (
         cards.map((card,i)=>(
-            <Animate>
-
+            <Animate
+                key={i}
+                show={props.show}
+                start={{
+                    left:0,
+                    bottom:0
+                }}
+                enter={{
+                    left:[card.left],
+                    bottom:[card.bottom],
+                    timing:{ delay:500,duration: 500, ease:easePolyOut}
+                }}
+            >
+                {({left,bottom})=>(
+                    <div
+                        style={{
+                            position:'absolute',
+                            left,
+                            bottom
+                        }}
+                    >
+                       <PlayerCard
+                            number="30"
+                            name="Nicolas"
+                            lastname="Otamendi"
+                            bck={card.player}
+                       />
+                    </div>
+                )}
             </Animate>
         ))
     )
