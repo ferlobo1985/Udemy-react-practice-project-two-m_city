@@ -18,12 +18,33 @@ const Enroll = () => {
             .email('Invalid email')
             .required('The email is required')
         }),
-        onSubmit:( values )=>{
-            ///
+        onSubmit:( values,{ resetForm} )=>{
             setLoading(true);
-                //// submit form
+            submitForm(values)
         }
-    })
+    });
+
+
+    const submitForm = async(values) => {
+        try{
+            const isOnTheList = await promotionsCollection
+            .where('email','==',values.email).get();
+
+            if(isOnTheList.docs.length >= 1){
+                showErrorToast('sorry you are on the list already');
+                setLoading(false);
+                return false;
+            }
+
+            ////// 
+            await promotionsCollection.add({ email: values.email });
+            formik.resetForm();
+            setLoading(false);
+            showSuccessToast('Congratulation !!!:)');
+        } catch(error){
+            showErrorToast(error)
+        }
+    }
 
 
     return(
