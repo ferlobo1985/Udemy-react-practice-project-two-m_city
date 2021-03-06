@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { firebase } from '../../firebase';
 import FileUploader from 'react-firebase-file-uploader';
 import { CircularProgress } from '@material-ui/core';
+import { Minimize } from '@material-ui/icons';
 
 
 class Fileuploader extends Component {
@@ -30,16 +31,22 @@ class Fileuploader extends Component {
         this.setState({
             name:filename,
             isUploading: false
-        })
+        });
+
+        firebase.storage().ref(this.props.dir)
+        .child(filename).getDownloadURL()
+        .then( url => {
+            this.setState({fileURL: url })
+        });
+
+        this.props.filename(filename);
     }
 
 
- 
-
     render(){
-        console.log(this.state)
         return(
             <div>
+                { !this.state.fileURL ?
                 <div>
                     <FileUploader
                         accept="image/*"
@@ -51,6 +58,38 @@ class Fileuploader extends Component {
                         onUploadSuccess={this.handleUploadSuccess}
                     />
                 </div>
+                
+                :null}
+                
+                { this.state.isUploading ?
+                    <div className="progress"
+                        style={{textAlign:'center',margin:'30px 0'}}
+                    >
+                        <CircularProgress
+                            style={{color:'#98c6e9'}}
+                            thickness={7}
+                        />
+                    </div>
+                :null}
+                
+                { this.state.fileURL ? 
+                    <div className="image_upload_container">
+                        <img
+                            style={{
+                                width:'100%'
+                            }}
+                            src={this.state.fileURL}
+                            alt={this.state.name}
+                        >
+                        </img>
+                        <div className="remove" onClick={()=> alert('remove')}>
+                            Remove
+                        </div>
+                    </div>
+            
+            
+                :null}
+
             </div>
         )
     }

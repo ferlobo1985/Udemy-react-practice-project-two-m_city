@@ -13,7 +13,8 @@ const defaultValues = {
     name:'',
     lastname:'',
     number:'',
-    position:''
+    position:'',
+    image:''
 }
 
 const AddEditPlayers = (props) => {
@@ -35,8 +36,11 @@ const AddEditPlayers = (props) => {
             .max(100,'The max is 100'),
             position:Yup.string()
             .required('This input is required'),
+            image:Yup.string()
+            .required('This input is required'),
         }),
         onSubmit:(values)=>{
+            console.log(values)
             submitForm(values);
         }
     });
@@ -91,6 +95,10 @@ const AddEditPlayers = (props) => {
     },[props.match.params.playerid])
 
 
+    const updateImageName = (filename) => {
+        formik.setFieldValue('image',filename)
+    }
+
 
 
     return(
@@ -99,10 +107,12 @@ const AddEditPlayers = (props) => {
                 <div>
                     <form onSubmit={formik.handleSubmit}>
 
-                        <FormControl>
+                        <FormControl  error={selectIsError(formik,'image')}>
                             <Fileuploader
                                 dir="player"
+                                filename={(filename)=> updateImageName(filename)}
                             />
+                             {selectErrorHelper(formik,'image')}
                         </FormControl>
                         
 
