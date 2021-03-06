@@ -1,5 +1,6 @@
 import React,{ useEffect,useState } from 'react'
 import AdminLayout from '../../../Hoc/AdminLayout'
+import Fileuploader from '../../Utils/fileUploader'
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -98,8 +99,13 @@ const AddEditPlayers = (props) => {
                 <div>
                     <form onSubmit={formik.handleSubmit}>
 
+                        <FormControl>
+                            <Fileuploader
+                                dir="player"
+                            />
+                        </FormControl>
+                        
 
-                        image
                         <hr/>
                         <h4>Player info</h4>
                         <div className="mb-5">
