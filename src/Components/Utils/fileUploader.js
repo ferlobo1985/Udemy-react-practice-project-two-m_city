@@ -41,6 +41,27 @@ class Fileuploader extends Component {
 
         this.props.filename(filename);
     }
+    
+
+    static getDerivedStateFromProps(props,state){
+        if(props.defaultImg){
+            return state = {
+                name: props.defaultImgName,
+                fileURL: props.defaultImg
+            }
+        }
+        return null;
+    }
+
+
+    uploadAgain = () => {
+        this.setState({
+            name:'',
+            isUploading:false,
+            fileURL:''
+        });
+        this.props.resetImage();
+    }
 
 
     render(){
@@ -82,7 +103,7 @@ class Fileuploader extends Component {
                             alt={this.state.name}
                         >
                         </img>
-                        <div className="remove" onClick={()=> alert('remove')}>
+                        <div className="remove" onClick={()=> this.uploadAgain()}>
                             Remove
                         </div>
                     </div>
