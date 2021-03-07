@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 
 const LeagueTable = () => {
-    const [positions, setPosition] = useState(null)
+    const [positions, setPosition] = useState(null);
 
 
     useEffect(()=>{
