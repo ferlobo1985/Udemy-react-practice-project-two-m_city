@@ -102,7 +102,15 @@ const AddEditMatch = (props) => {
                 setLoading(true);
             });
         } else {
-
+            matchesCollection.doc(props.match.params.matchid)
+            .update(dataToSubmit)
+            .then(()=>{
+                showSuccessToast('Match Updated');
+            }).catch(error => {
+                showErrorToast('Sorry, something went wrong',error)
+            }).finally(()=>{
+                setLoading(true);
+            });
         }
 
 
